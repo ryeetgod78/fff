@@ -342,12 +342,23 @@ namespace Oxide.Plugins
 
             elements.Add(new CuiElement
             {
-                Name = "Stats",
+                Name = "StatsOutline",
                 Parent = "Hud",
                 Components =
         {
+            new CuiImageComponent { Color = "0 0 0 1" },
+            new CuiRectTransformComponent { AnchorMin = "0.889 0.631", AnchorMax = "0.994 0.677" }
+        }
+            });
+
+            elements.Add(new CuiElement
+            {
+                Name = "Stats",
+                Parent = "StatsOutline",
+                Components =
+        {
             new CuiImageComponent { Color = StatsColor, Material = BlurMaterial },
-            new CuiRectTransformComponent { AnchorMin = "0.891 0.633", AnchorMax = "0.992 0.675" }
+            new CuiRectTransformComponent { AnchorMin = "0.002 0.002", AnchorMax = "0.998 0.998" }
         }
             });
 
@@ -392,12 +403,23 @@ namespace Oxide.Plugins
 
             elements.Add(new CuiElement
             {
-                Name = "Timer",
+                Name = "TimerOutline",
                 Parent = "Hud",
                 Components =
         {
+            new CuiImageComponent { Color = "0 0 0 1" },
+            new CuiRectTransformComponent { AnchorMin = "0.902 0.588", AnchorMax = "0.984 0.634" }
+        }
+            });
+
+            elements.Add(new CuiElement
+            {
+                Name = "Timer",
+                Parent = "TimerOutline",
+                Components =
+        {
             new CuiImageComponent { Color = TimerColor, Material = BlurMaterial },
-            new CuiRectTransformComponent { AnchorMin = "0.904 0.59", AnchorMax = "0.982 0.632" }
+            new CuiRectTransformComponent { AnchorMin = "0.002 0.002", AnchorMax = "0.998 0.998" }
         }
             });
 
@@ -577,7 +599,7 @@ namespace Oxide.Plugins
 
         private void DestroyAllUI(BasePlayer player)
         {
-            string[] ids = { "Stats", "Header", "Leaderboard", "Timer", "LeaveButton", "StatsText", "LeaderboardText", "TimerText", "Logo", "SaveLoadoutButton", "SaveLoadoutText", "ResetLoadoutButton", "ResetLoadoutText", "AntiCrouchButton", "AntiCrouchText", "StatsModeButton", "StatsModeText", "HeadshotButton", "HeadshotText" };
+            string[] ids = { "StatsOutline", "Stats", "Header", "Leaderboard", "TimerOutline", "Timer", "LeaveButton", "StatsText", "LeaderboardText", "TimerText", "Logo", "SaveLoadoutButton", "SaveLoadoutText", "ResetLoadoutButton", "ResetLoadoutText", "AntiCrouchButton", "AntiCrouchText", "StatsModeButton", "StatsModeText", "HeadshotButton", "HeadshotText" };
             foreach (var id in ids)
                 CuiHelper.DestroyUi(player, id);
         }
@@ -660,7 +682,16 @@ namespace Oxide.Plugins
                 text = $"Kills: {data.Kills}  Deaths: {data.Deaths}  K/D: {kdr:0.00}";
             }
 
-            AddOutlinedText(elements, "StatsText", "Hud", text, 12, "0.891 0.633", "0.992 0.675", TextAnchor.MiddleCenter, "1 0.843 0 1");
+            elements.Add(new CuiElement
+            {
+                Name = "StatsText",
+                Parent = "Stats",
+                Components =
+                {
+                    new CuiTextComponent { Text = text, FontSize = 12, Align = TextAnchor.MiddleCenter, Color = "1 0.843 0 1" },
+                    new CuiRectTransformComponent { AnchorMin = "0 0", AnchorMax = "1 1" }
+                }
+            });
 
             CuiHelper.AddUi(player, elements);
         }
@@ -683,7 +714,16 @@ namespace Oxide.Plugins
                 CuiHelper.DestroyUi(player, "TimerText");
 
                 var elements = new CuiElementContainer();
-                AddOutlinedText(elements, "TimerText", "Timer", $"⏱ {timeString}", 14, "0 0", "1 1", TextAnchor.MiddleCenter, "1 1 1 1");
+                elements.Add(new CuiElement
+                {
+                    Name = "TimerText",
+                    Parent = "Timer",
+                    Components =
+                    {
+                        new CuiTextComponent { Text = $"⏱ {timeString}", FontSize = 14, Align = TextAnchor.MiddleCenter, Color = "1 1 1 1" },
+                        new CuiRectTransformComponent { AnchorMin = "0 0", AnchorMax = "1 1" }
+                    }
+                });
 
                 CuiHelper.AddUi(player, elements);
             }
@@ -754,58 +794,6 @@ namespace Oxide.Plugins
             }
         }
 
-        private void AddOutlinedText(CuiElementContainer container, string name, string parent, string text, int fontSize, string anchorMin, string anchorMax, TextAnchor align = TextAnchor.MiddleCenter, string color = "1 1 1 1")
-        {
-            string[] offsets = { "-0.001 0", "0.001 0", "0 -0.001", "0 0.001" };
-
-            foreach (var offset in offsets)
-            {
-                container.Add(new CuiElement
-                {
-                    Name = $"{name}_outline_{offset}",
-                    Parent = parent,
-                    Components =
-            {
-                new CuiTextComponent
-                {
-                    Text = text,
-                    FontSize = fontSize,
-                    Align = align,
-                    Color = "0 0 0 1"
-                },
-                new CuiRectTransformComponent
-                {
-                    AnchorMin = anchorMin,
-                    AnchorMax = anchorMax,
-                    OffsetMin = offset,
-                    OffsetMax = offset
-                }
-            }
-                });
-            }
-
-            // Actual text
-            container.Add(new CuiElement
-            {
-                Name = name,
-                Parent = parent,
-                Components =
-                {
-                    new CuiTextComponent
-                    {
-                        Text = text,
-                        FontSize = fontSize,
-                        Align = align,
-                        Color = color
-                    },
-                    new CuiRectTransformComponent
-                    {
-                        AnchorMin = anchorMin,
-                        AnchorMax = anchorMax
-                    }
-                }
-            });
-        }
 
         private void OnPlayerAttack(BasePlayer attacker, HitInfo info)
         {
