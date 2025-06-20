@@ -89,9 +89,9 @@ namespace Oxide.Plugins
             var split = pos.Split(' ');
             if (split.Length != 3) return Vector3.zero;
 
-            float.TryParse(split[0], out float x);
-            float.TryParse(split[1], out float y);
-            float.TryParse(split[2], out float z);
+            float.TryParse(split[0], NumberStyles.Any, CultureInfo.InvariantCulture, out float x);
+            float.TryParse(split[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float y);
+            float.TryParse(split[2], NumberStyles.Any, CultureInfo.InvariantCulture, out float z);
             return new Vector3(x, y, z);
         }
 
