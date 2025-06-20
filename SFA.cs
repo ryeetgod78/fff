@@ -660,26 +660,7 @@ namespace Oxide.Plugins
                 text = $"Kills: {data.Kills}  Deaths: {data.Deaths}  K/D: {kdr:0.00}";
             }
 
-            elements.Add(new CuiElement
-            {
-                Name = "StatsText",
-                Parent = "Hud",
-                Components =
-        {
-            new CuiTextComponent
-            {
-                Text = text,
-                FontSize = 12,
-                Align = TextAnchor.MiddleCenter,
-                Color = "1 0.843 0 1"
-            },
-            new CuiRectTransformComponent
-            {
-                AnchorMin = "0.891 0.633",
-                AnchorMax = "0.992 0.675"
-            }
-        }
-            });
+            AddOutlinedText(elements, "StatsText", "Hud", text, 12, "0.891 0.633", "0.992 0.675", TextAnchor.MiddleCenter, "1 0.843 0 1");
 
             CuiHelper.AddUi(player, elements);
         }
@@ -702,26 +683,7 @@ namespace Oxide.Plugins
                 CuiHelper.DestroyUi(player, "TimerText");
 
                 var elements = new CuiElementContainer();
-                elements.Add(new CuiElement
-                {
-                    Name = "TimerText",
-                    Parent = "Timer",
-                    Components =
-            {
-                new CuiTextComponent
-                {
-                    Text = $"⏱ {timeString}",
-                    FontSize = 14,
-                    Align = TextAnchor.MiddleCenter,
-                    Color = "1 1 1 1"
-                },
-                new CuiRectTransformComponent
-                {
-                    AnchorMin = "0 0",
-                    AnchorMax = "1 1"
-                }
-            }
-                });
+                AddOutlinedText(elements, "TimerText", "Timer", $"⏱ {timeString}", 14, "0 0", "1 1", TextAnchor.MiddleCenter, "1 1 1 1");
 
                 CuiHelper.AddUi(player, elements);
             }
@@ -792,7 +754,7 @@ namespace Oxide.Plugins
             }
         }
 
-        private void AddOutlinedText(CuiElementContainer container, string name, string parent, string text, int fontSize, string anchorMin, string anchorMax, TextAnchor align = TextAnchor.MiddleCenter)
+        private void AddOutlinedText(CuiElementContainer container, string name, string parent, string text, int fontSize, string anchorMin, string anchorMax, TextAnchor align = TextAnchor.MiddleCenter, string color = "1 1 1 1")
         {
             string[] offsets = { "-0.001 0", "0.001 0", "0 -0.001", "0 0.001" };
 
@@ -834,7 +796,7 @@ namespace Oxide.Plugins
                         Text = text,
                         FontSize = fontSize,
                         Align = align,
-                        Color = "1 1 1 1"
+                        Color = color
                     },
                     new CuiRectTransformComponent
                     {
