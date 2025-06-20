@@ -410,7 +410,7 @@ namespace Oxide.Plugins
             new CuiButtonComponent
             {
                 Color = "0.1 0.1 0.1 0.7",
-                Command = LeaveCommand,
+                Command = "chat.say /" + LeaveCommand,
                 Close = ""
             },
             new CuiRectTransformComponent { AnchorMin = "0.697 0.022", AnchorMax = "0.775 0.078" }
@@ -444,7 +444,7 @@ namespace Oxide.Plugins
             new CuiButtonComponent
             {
                 Color = "0.31 0.31 0.31 0.6",
-                Command = "sfasaveloadout",
+                Command = "chat.say /sfasaveloadout",
                 Close = ""
             },
             // Position near the bottom left as requested
@@ -473,7 +473,7 @@ namespace Oxide.Plugins
             new CuiButtonComponent
             {
                 Color = "0.31 0.31 0.31 0.6",
-                Command = "sfaresetloadout",
+                Command = "chat.say /sfaresetloadout",
                 Close = ""
             },
             // Align reset button just left of the save button
@@ -499,7 +499,7 @@ namespace Oxide.Plugins
                 Parent = "Hud",
                 Components =
         {
-            new CuiButtonComponent { Color = "0.31 0.31 0.31 0.6", Command = "sfaanticrouch", Close = "" },
+            new CuiButtonComponent { Color = "0.31 0.31 0.31 0.6", Command = "chat.say /sfaanticrouch", Close = "" },
             new CuiRectTransformComponent { AnchorMin = "0.906 0.461", AnchorMax = "1 0.503" }
         }
             });
@@ -522,7 +522,7 @@ namespace Oxide.Plugins
                 Parent = "Hud",
                 Components =
         {
-            new CuiButtonComponent { Color = "0.31 0.31 0.31 0.6", Command = "sfastatsmode", Close = "" },
+            new CuiButtonComponent { Color = "0.31 0.31 0.31 0.6", Command = "chat.say /sfastatsmode", Close = "" },
             new CuiRectTransformComponent { AnchorMin = "0.906 0.419", AnchorMax = "1 0.461" }
         }
             });
@@ -545,7 +545,7 @@ namespace Oxide.Plugins
                 Parent = "Hud",
                 Components =
         {
-            new CuiButtonComponent { Color = "0.31 0.31 0.31 0.6", Command = "sfaheadshot", Close = "" },
+            new CuiButtonComponent { Color = "0.31 0.31 0.31 0.6", Command = "chat.say /sfaheadshot", Close = "" },
             new CuiRectTransformComponent { AnchorMin = "0.906 0.503", AnchorMax = "1 0.544" }
         }
             });
@@ -883,6 +883,19 @@ namespace Oxide.Plugins
             if (input.IsDown(BUTTON.DUCK) || player.IsDucked())
             {
                 input.current.buttons &= ~(int)BUTTON.DUCK;
+                player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
+                player.modelState.ducked = false;
+                player.SendNetworkUpdate();
+            }
+        }
+
+        private void OnPlayerTick(BasePlayer player)
+        {
+            if (!antiCrouch || player == null) return;
+            if (!InEvent.Contains(player.userID)) return;
+
+            if (player.IsDucked())
+            {
                 player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
                 player.modelState.ducked = false;
                 player.SendNetworkUpdate();
