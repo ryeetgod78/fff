@@ -885,7 +885,6 @@ namespace Oxide.Plugins
                 input.current.buttons &= ~(int)BUTTON.DUCK;
                 player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
                 player.modelState.ducked = false;
-                player.SetPlayerFlag(BasePlayer.PlayerFlags.Ducked, false);
                 player.SendNetworkUpdate();
             }
         }
