@@ -878,12 +878,16 @@ namespace Oxide.Plugins
         private void ClearCrouch(BasePlayer player, InputState input)
         {
             if (player == null) return;
+
             if (input != null)
                 input.current.buttons &= ~(int)BUTTON.DUCK;
 
             player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
             player.modelState.ducked = false;
-            player.SendNetworkUpdate();
+
+            // update client immediately so the player is forced to stand up
+            player.UpdatePlayerModel();
+            player.SendNetworkUpdateImmediate();
         }
 
         private void OnPlayerInput(BasePlayer player, InputState input)
