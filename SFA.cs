@@ -885,8 +885,7 @@ namespace Oxide.Plugins
             player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
             player.modelState.ducked = false;
 
-            // update client immediately so the player is forced to stand up
-            player.UpdatePlayerModel();
+            // force the client to stand up immediately
             player.SendNetworkUpdateImmediate();
         }
 
