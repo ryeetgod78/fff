@@ -861,11 +861,12 @@ namespace Oxide.Plugins
 
             if (!Stats.TryGetValue(attacker.userID, out var aStats))
                 Stats[attacker.userID] = aStats = new PlayerStats();
-            aStats.ShotsHit++;
 
             // if headshot-only mode is enabled, cancel damage unless it was a headshot
             if (headshotOnly && !info.isHeadshot)
                 return true;
+
+            aStats.ShotsHit++;
 
             return null;
         }
