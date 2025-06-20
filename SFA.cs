@@ -43,9 +43,9 @@ namespace Oxide.Plugins
         private bool restrictJoin = false;
 
 
-        private List<ulong> InEvent = new();
-        private Dictionary<ulong, PlayerStats> Stats = new();
-        private Dictionary<ulong, SavedLoadout> SavedLoadouts = new();
+        private List<ulong> InEvent = new List<ulong>();
+        private Dictionary<ulong, PlayerStats> Stats = new Dictionary<ulong, PlayerStats>();
+        private Dictionary<ulong, SavedLoadout> SavedLoadouts = new Dictionary<ulong, SavedLoadout>();
         private bool headshotOnly = false;
         private bool antiCrouch = false;
         private bool accuracyMode = false;
@@ -63,7 +63,7 @@ namespace Oxide.Plugins
         private const string TimerColor = "0.15 0.15 0.15 0.6";
         private const string BlurMaterial = "assets/content/ui/uibackgroundblur-ingame.mat";
 
-        private List<string> SpawnPositions = new()
+        private List<string> SpawnPositions = new List<string>()
         {
             "568.45 0.12 2372.19",
             "554.23 0.12 2291.54",
@@ -112,9 +112,9 @@ namespace Oxide.Plugins
 
         private class SavedLoadout
         {
-            public List<SavedItem> Belt = new();
-            public List<SavedItem> Wear = new();
-            public List<SavedItem> Main = new();
+            public List<SavedItem> Belt = new List<SavedItem>();
+            public List<SavedItem> Wear = new List<SavedItem>();
+            public List<SavedItem> Main = new List<SavedItem>();
         }
 
         private class MVPLogEntry
@@ -127,7 +127,7 @@ namespace Oxide.Plugins
             public string Timestamp;
         }
 
-        private List<MVPLogEntry> mvpLog = new();
+        private List<MVPLogEntry> mvpLog = new List<MVPLogEntry>();
         private const string MVPDataFile = "SFA_MVPLogs";
         private const string LoadoutDataFile = "SFA_Loadouts";
         private void Init()
@@ -605,13 +605,15 @@ namespace Oxide.Plugins
                 var entry = ordered[i];
                 var name = covalence.Players.FindPlayerById(entry.Key.ToString())?.Name ?? "Unknown";
                 var prefix = entry.Key == mvpId ? "<color=#ffd700>[MVP]</color> " : "";
-                string color = i switch
-                {
-                    0 => "#ffd700", // gold
-                    1 => "#c0c0c0", // silver
-                    2 => "#cd7f32", // bronze
-                    _ => "#ffffff"
-                };
+                string color;
+                if (i == 0)
+                    color = "#ffd700"; // gold
+                else if (i == 1)
+                    color = "#c0c0c0"; // silver
+                else if (i == 2)
+                    color = "#cd7f32"; // bronze
+                else
+                    color = "#ffffff";
                 lines.Add($"<color={color}>{i + 1}. {prefix}{name} - {entry.Value.Kills}K</color>");
             }
 
@@ -751,13 +753,15 @@ namespace Oxide.Plugins
                     var entry = ordered[i];
                     var name = covalence.Players.FindPlayerById(entry.Key.ToString())?.Name ?? "Unknown";
                     var prefix = entry.Key == mvpId ? "<color=#ffd700>[MVP]</color> " : "";
-                    string color = i switch
-                    {
-                        0 => "#ffd700",
-                        1 => "#c0c0c0",
-                        2 => "#cd7f32",
-                        _ => "#ffffff"
-                    };
+                    string color;
+                    if (i == 0)
+                        color = "#ffd700";
+                    else if (i == 1)
+                        color = "#c0c0c0";
+                    else if (i == 2)
+                        color = "#cd7f32";
+                    else
+                        color = "#ffffff";
                     lines.Add($"<color={color}>{i + 1}. {prefix}{name} - {entry.Value.Kills}K</color>");
                 }
 
