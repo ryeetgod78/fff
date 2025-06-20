@@ -875,18 +875,24 @@ namespace Oxide.Plugins
             return null;
         }
 
+        private void ClearCrouch(BasePlayer player, InputState input)
+        {
+            if (player == null) return;
+            if (input != null)
+                input.current.buttons &= ~(int)BUTTON.DUCK;
+
+            player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
+            player.modelState.ducked = false;
+            player.SendNetworkUpdate();
+        }
+
         private void OnPlayerInput(BasePlayer player, InputState input)
         {
             if (!antiCrouch || player == null || input == null) return;
             if (!InEvent.Contains(player.userID)) return;
 
             if (input.IsDown(BUTTON.DUCK) || player.IsDucked())
-            {
-                input.current.buttons &= ~(int)BUTTON.DUCK;
-                player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
-                player.modelState.ducked = false;
-                player.SendNetworkUpdate();
-            }
+                ClearCrouch(player, input);
         }
 
         private void OnPlayerTick(BasePlayer player)
@@ -895,11 +901,7 @@ namespace Oxide.Plugins
             if (!InEvent.Contains(player.userID)) return;
 
             if (player.IsDucked())
-            {
-                player.serverInput.current.buttons &= ~(int)BUTTON.DUCK;
-                player.modelState.ducked = false;
-                player.SendNetworkUpdate();
-            }
+                ClearCrouch(player, player.serverInput);
         }
 
         private void OnEntityDeath(BaseCombatEntity entity, HitInfo info)
